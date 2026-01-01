@@ -1,0 +1,78 @@
+# ===============================
+# Python
+# ===============================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.env/
+.env.*
+.venv/
+
+# ===============================
+# Packaging / tooling
+# ===============================
+pip-wheel-metadata/
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# ===============================
+# Logs
+# ===============================
+*.log
+logs/
+
+# ===============================
+# OS / Editor
+# ===============================
+.DS_Store
+Thumbs.db
+
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ===============================
+# Runtime / local state
+# ===============================
+*.pid
+*.socket
+
+# ===============================
+# Docker
+# ===============================
+docker-compose.override.yml
+
+# ===============================
+# Secrets / credentials
+# ===============================
+.env.local
+.env.dev
+.env.prod
+
+# ===============================
+# Test artifacts
+# ===============================
+.coverage
+htmlcov/
+.pytest_cache/
+
+# ===============================
+# Database dumps / local data
+# ===============================
+*.sql
+*.dump
+*.bak
+
+# ===============================
+# Redis / Kafka local data (safety)
+# ===============================
+redis-data/
+kafka-data/
+redpanda-data/
