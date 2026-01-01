@@ -1,6 +1,13 @@
 ﻿"""
-Lightweight observability - counters, lag tracking, health checks.
-No external dependencies (Prometheus etc) - just clean Python.
+Lightweight observability.
+
+Tracks:
+- Semantic counters
+- Ingestion lag
+- Throughput
+- Health signals
+
+No external dependencies by design.
 """
 import time
 import threading

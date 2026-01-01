@@ -1,6 +1,4 @@
-﻿version: '3.8'
-
-services:
+﻿services:
   redpanda:
     image: redpandadata/redpanda:latest
     container_name: redpanda

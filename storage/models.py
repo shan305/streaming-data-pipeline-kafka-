@@ -1,7 +1,11 @@
 """
-SQLAlchemy models for cold storage (historical trades).
-Append-only, replay-safe.
+Cold storage for historical trades.
+
+Append-only.
+Replay-safe.
+Idempotent under duplicate Kafka delivery.
 """
+
 from sqlalchemy import (
     Column,
     Integer,
@@ -27,6 +31,7 @@ class Trade(Base):
     event_time_ms = Column(BigInteger, nullable=False)
 
     __table_args__ = (
+        # Enforces idempotent replay safety
         Index("uq_trade_symbol_time", "symbol", "event_time_ms", unique=True),
     )
 

@@ -1,3 +1,12 @@
+"""
+Kafka ingestion producer.
+
+Kafka is the FIRST durability boundary.
+If Kafka does not acknowledge a message, it is treated as LOST.
+
+Downstream systems rely only on Kafka-acknowledged events.
+"""
+
 import json
 import websocket
 from confluent_kafka import Producer
@@ -13,23 +22,32 @@ from observability.metrics import metrics
 producer = Producer(KAFKA_PRODUCER_CONFIG)
 
 
+def delivery_report(err, msg):
+    if err:
+        metrics.inc("errors")
+        raise RuntimeError(f"Kafka produce failed: {err}")
+
+
 def on_message(ws, message):
     data = json.loads(message)
 
     payload = {
         "symbol": data["s"].lower(),
-        "price": data["p"],
-        "quantity": data["q"],
+        "price": float(data["p"]),
+        "quantity": float(data["q"]),
         "event_time_ms": data["T"],
     }
 
     producer.produce(
         topic=KAFKA_TOPIC_TRADES,
-        key=f"{payload['symbol']}-{payload['event_time_ms']}",
+        key=f"{payload['symbol']}:{payload['event_time_ms']}",
         value=json.dumps(payload),
+        on_delivery=delivery_report,
     )
     producer.poll(0)
-    metrics.inc("messages_produced")
+
+    metrics.inc("ingestion.events.produced")
+    metrics.record_ingest_lag(payload["symbol"], payload["event_time_ms"])
 
 
 def start():
@@ -44,7 +62,6 @@ def start():
         except Exception:
             attempt += 1
             reconnect_loop(attempt)
-
 
 
 if __name__ == "__main__":
